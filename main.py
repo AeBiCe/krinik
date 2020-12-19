@@ -1,1 +1,6 @@
-print("Hello Niko")
+'''
+authors:
+Nikolaos Papadopoulos
+Kristoffer Björklund
+
+'''
