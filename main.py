@@ -17,7 +17,7 @@ mycursor = mydb.cursor()
 createTables = True
 #First draft of create tables.
 if createTables:
-    mycursor.execute("CREATE TABLE ORDERS (o_id VARCHAR(255), cus_id VARCHAR(255), game_id VARCHAR(255), total_price VARCHAR(255))")
+    mycursor.execute("CREATE TABLE ORDERS (o_id VARCHAR(255), c_id VARCHAR(255), g_id VARCHAR(255), total_price VARCHAR(255))")
     mycursor.execute("CREATE TABLE CUSTOMER (c_id VARCHAR(255), c_name VARCHAR(255), gender VARCHAR(255))")
     mycursor.execute("CREATE TABLE GAME (g_id VARCHAR(255), price VARCHAR(255), g_name VARCHAR(255))")
 
