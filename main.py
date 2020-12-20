@@ -83,10 +83,11 @@ def most_sold_game():
     sql2 = "Select g_name, COUNT(g_name) as copies from topFiveGames GROUP BY g_name ORDER BY copies DESC LIMIT 5"
     mycursor.execute(sql2)
     result = mycursor.fetchall()
-    print("Printing top five sold games")
+    print("Printing top five sold games\n=========================================")
     for row in result:
         print("Game name: ",row[0], )
         print("Copies Sold: ",row[1])
+        print("=========================================")
     #print("Game ID: ",result[0],", Copies sold: ",result[1])  # Print to test result
 
 
@@ -113,8 +114,8 @@ if menuOptions:
     elif choice == 4:
         view_specific_order()
     elif choice == 5:
-        print("STATISTIC\n1.View most sold game.\n2.Average game cost.\nADD MORE LATER")
-        choice = int(input("What statistic do you want to view?"))
+        print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\nADD MORE LATER")
+        choice = int(input("\nWhat statistic do you want to view?: "))
         if choice == 1:
             most_sold_game()
         elif choice == 2:
