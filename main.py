@@ -67,10 +67,18 @@ def place_order():
 
 def view_specific_order():
     o_id = input("Enter order ID: ")
-    sql = ("select * from krinik.orders where o_id = %s" % o_id)
+    sql = ("select * from krinik.orders where o_id = %s" % o_id)  # Query to select specific order
     mycursor.execute(sql, o_id)
-    result = mycursor.fetchone()
+    result = mycursor.fetchone()  # Fetch the result into a list
     print("Order ID:",result[0],", Customer ID:",result[1],", Game ID:",result[2],", Order price:",result[3],"$")
+
+
+def most_sold_game():
+    sql = "SELECT g_id, COUNT(g_id) as most_sold from krinik.orders GROUP BY g_id " \
+          "ORDER BY most_sold DESC LIMIT 1"
+    mycursor.execute(sql)
+    result = mycursor.fetchone()
+    print("Game ID: ",result[0],", Copies sold: ",result[1])  # Print to test result
 
 
 if menuOptions:
@@ -89,7 +97,11 @@ if menuOptions:
     elif choice == 4:
         view_specific_order()
     elif choice == 5:
-        print("Fifth choice")
+        most_sold_game()
+        # print("STATISTIC\n1.View most sold game.\nADD MORE LATER")
+        # choice = input("What statistic do you want to view?")
+        # if choice == 1:
+        #     most_sold_game()
     elif choice == 6:
         create_game()
     elif choice == 0:
