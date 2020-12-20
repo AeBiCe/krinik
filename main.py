@@ -1,8 +1,7 @@
 import mysql.connector
 from faker import Faker
 import random
-import requests
-import json
+
 '''
 authors:
 Nikolaos Papadopoulos
@@ -17,10 +16,14 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor(buffered=True)
+tot_customer = 0
+tot_games = 0
 def fill_customers():
+    global tot_customer
     fake = Faker()
     genders = ["male","female"]
     for x in range(100):
+        tot_customer = tot_customer+ 1
         c_name = fake.name()
         gender = random.choice(genders)
         sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
@@ -29,12 +32,13 @@ def fill_customers():
         mydb.commit()
 
 def fill_games():
+    global tot_games
     with open('games.txt') as f:
         content = f.readlines()
-    # you may also want to remove whitespace characters like `\n` at the end of each line
     content = [x.strip() for x in content]
     prices = [50,30,56,100,299,198,29,99,150,10,1000,499,90,333,45,1337,666]
     for game in content:
+        tot_games = tot_games+1
         price = random.choice(prices)
         g_name = game
         sql ="INSERT IGNORE INTO GAME (price, g_name) VALUES (%s,%s)"
@@ -42,9 +46,23 @@ def fill_games():
         mycursor.execute(sql, val)
         mydb.commit()
 
+
+def fill_order(c_id, g_id):
+    # take customer id and game id from consol
+    sql_get_price = ("select price from krinik.game where g_id = %s" % g_id)  # Query to select price from game id entered
+    total_price = mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
+    total_price = mycursor.fetchone()  # Fetches value from cursor
+    #print("PRICE: ",tot_price)  # Error handling
+    final_price = total_price[0]  # take first value since tot_price is a list
+    sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, total_price) VALUES (%s,%s,%s)"  # SQL query to insert order into the table
+    val = (c_id, g_id, final_price)
+    mycursor.execute(sql, val)
+    mydb.commit()
+
+
 createTables = False
-menuOptions = False
-fillTables = True
+menuOptions = True
+fillTables = False
 #First draft of create tables.
 if createTables:
     mycursor.execute("DROP TABLE IF EXISTS Orders")
@@ -61,7 +79,10 @@ if createTables:
 if fillTables:
     fill_customers()
     fill_games()
-
+    for x in range(100):
+        c_id = random.randint(1,tot_customer)
+        g_id = random.randint(1,tot_games)
+        fill_order(c_id,g_id)
 
 def register_customer():
     c_name = str(input("Enter Customer name: "))
@@ -70,10 +91,6 @@ def register_customer():
     val = (c_name, gender)
     mycursor.execute(sql, val)
     mydb.commit()
-
-
-
-
 
 
 def create_game():
@@ -158,7 +175,7 @@ def popular_gender_game():
           "as c on o.c_id = c.c_id"
     mycursor.execute(sql)
     mycursor.execute("drop view if exists popGender")
-    gender = input("What gender do you want to look up (male, female or other): ")
+    gender = input("What gender do you want to look up (male or female): ")
     # create view and select game id and the amount of times it occurs
     # to find the most sold game where the gender matches
     sql2 = ("create view popGender as select g_id, count(g_id) as times from genderStat where BINARY gender = '%s' " \
@@ -182,6 +199,8 @@ if menuOptions:
     if choice == 1:
         register_customer()
     elif choice == 2:
+        print(tot_games)
+        print(tot_customer)
         print("Second choice")
     elif choice == 3:
         place_order()
