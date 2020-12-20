@@ -104,13 +104,11 @@ if menuOptions:
     elif choice == 4:
         view_specific_order()
     elif choice == 5:
-        avg_game_cost()
         print("STATISTIC\n1.View most sold game.\n2.Average game cost.\nADD MORE LATER")
-        choice = input("What statistic do you want to view?")
+        choice = int(input("What statistic do you want to view?"))
         if choice == 1:
             most_sold_game()
         elif choice == 2:
-            print("HELLO MUTHAFUCKA")
             avg_game_cost()
     elif choice == 6:
         create_game()
