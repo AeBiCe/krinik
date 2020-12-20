@@ -53,11 +53,13 @@ def place_order():
     # take customer id and game id from consol
     c_id = int(input("Enter Customer ID: "))
     g_id = int(input("Enter game ID: "))
-    sql_get_price = "select price from krinik.game where g_id = %s"  # Query to select price from game id entered
-    total_price = mycursor.execute(sql_get_price, (g_id,))  # Execute query and use game id entered as value
-    print("PRICE: ",total_price)
+    sql_get_price = ("select price from krinik.game where g_id = %s" % g_id)  # Query to select price from game id entered
+    total_price = mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
+    tot_price = mycursor.fetchone() # Fetches value from cursor
+    #print("PRICE: ",tot_price)  # Error handling
+    final_price = int(tot_price[0]) # take first value since tot_price is a list
     sql = "INSERT INTO ORDER(c_id, g_id, total_price) VALUES (%s,%s,%s)"  # SQL query to insert order into the table
-    val = (c_id, g_id, total_price)
+    val = (c_id, g_id, final_price)
     mycursor.execute(sql, val)
     mydb.commit()
 
