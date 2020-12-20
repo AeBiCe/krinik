@@ -98,16 +98,19 @@ def avg_game_cost():
     print("The average cost of all games is: ",avg_cost[0])
 
 def loyal_customer():
-    mycursor.execute("DROP VIEW IF EXISTS loyalCustomer")
+    mycursor.execute("DROP VIEW IF EXISTS loyalCustomer")  # if view exists we drop it
+    # We create a view with customer id, customer name and prices from orders and join that with out customer table
     sql = "CREATE VIEW loyalCustomer as select ord.c_id, cs.c_name, ord.total_price from orders as ord " \
           "left join customer as cs on ord.c_id = cs.c_id"
-    mycursor.execute(sql)
-    mycursor.execute("DROP VIEW IF EXISTS customersum")
+    mycursor.execute(sql)  # execute sql above
+    mycursor.execute("DROP VIEW IF EXISTS customersum")  # If customersum view exists we drop it
+    # We create a new view with customer name and the sum of all of the customers purchases taken from previous view
     sql2 = "create view customerSum as SELECT distinct c_name as cus_name, sum(total_price) " \
            "as the_sum from loyalcustomer group by c_name"
-    mycursor.execute(sql2)
+    mycursor.execute(sql2) # execute query above
+    # We select the customer with the highest amount purchased
     sql3 = "select cus_name, MAX(the_sum) as top from customersum group by the_sum order by the_sum DESC LIMIT 1"
-    mycursor.execute(sql3)
+    mycursor.execute(sql3) # execute query above 
     most_loyal = mycursor.fetchone()
     print("Customer name: ",most_loyal[0],", Total amount spent: ",most_loyal[1],"$")
 
