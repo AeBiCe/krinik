@@ -74,11 +74,20 @@ def view_specific_order():
 
 
 def most_sold_game():
-    sql = "CREATE VIEW stat as SELECT g_id, COUNT(g_id) as most_sold from krinik.orders GROUP BY g_id " \
-          "ORDER BY most_sold  "
+    mycursor.execute("DROP VIEW IF EXISTS topFiveGames")  # if view exists then drop it to create new.
+    # We create a view and left join it with table game to only get games that are sold.
+    sql = "CREATE VIEW topFiveGames as select ord.g_id, gm.g_name from orders as ord " \
+          "left join game as gm on ord.g_id = gm.g_id"
     mycursor.execute(sql)
-    result = mycursor.fetchone()
-    print("Game ID: ",result[0],", Copies sold: ",result[1])  # Print to test result
+    # We select the name of the game and the copies sold of that game from the view that we created.
+    sql2 = "Select g_name, COUNT(g_name) as copies from topFiveGames GROUP BY g_name ORDER BY copies DESC LIMIT 5"
+    mycursor.execute(sql2)
+    result = mycursor.fetchall()
+    print("Printing top five sold games")
+    for row in result:
+        print("Game name: ",row[0], )
+        print("Copies Sold: ",row[1])
+    #print("Game ID: ",result[0],", Copies sold: ",result[1])  # Print to test result
 
 
 def avg_game_cost():
