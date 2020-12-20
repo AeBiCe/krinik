@@ -1,4 +1,6 @@
 import mysql.connector
+from faker import Faker
+import random
 '''
 authors:
 Nikolaos Papadopoulos
@@ -39,6 +41,16 @@ def register_customer():
     mycursor.execute(sql, val)
     mydb.commit()
 
+def fill_customers():
+    fake = Faker()
+    genders = ["male","female"]
+    for x in range(100):
+        c_name = fake.name()
+        gender = random.choice(genders)
+        sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
+        val = (c_name, gender)
+        mycursor.execute(sql, val)
+        mydb.commit()
 
 def create_game():
     price = int(input("Enter price of the new game: "))
@@ -144,7 +156,11 @@ if menuOptions:
 
     choice = int(input("Enter menu choice: "))
     if choice == 1:
-        register_customer()
+        dummy = input("Would you like to fill with random customers (Y/N):")
+        if dummy == "Y":
+            fill_customers()
+        else:
+            register_customer()
     elif choice == 2:
         print("Second choice")
     elif choice == 3:
