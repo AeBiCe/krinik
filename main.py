@@ -110,10 +110,30 @@ def loyal_customer():
     mycursor.execute(sql2) # execute query above
     # We select the customer with the highest amount purchased
     sql3 = "select cus_name, MAX(the_sum) as top from customersum group by the_sum order by the_sum DESC LIMIT 1"
-    mycursor.execute(sql3) # execute query above 
+    mycursor.execute(sql3) # execute query above
     most_loyal = mycursor.fetchone()
     print("Customer name: ",most_loyal[0],", Total amount spent: ",most_loyal[1],"$")
 
+
+def popular_gender_game():
+    mycursor.execute("drop view if exists genderStat")
+    # create view with game id and gender and join with customer table
+    sql = "CREATE view genderStat as SELECT o.g_id, c.gender from orders as o right join customer " \
+          "as c on o.c_id = c.c_id"
+    mycursor.execute(sql)
+    mycursor.execute("drop view if exists popGender")
+    gender = input("What gender do you want to look up (male, female or other): ")
+    # create view and select game id and the amount of times it occurs
+    # to find the most sold game where the gender matches
+    sql2 = ("create view popGender as select g_id, count(g_id) as times from genderStat where BINARY gender = '%s' " \
+           "group by g_id order by times DESC LIMIT 5" % gender)
+    mycursor.execute(sql2, gender)
+    # We select the game name and the copies sold of that game from previous table
+    sql3 = "SELECT times, g_name from popGender as p right join game as g on p.g_id = g.g_id " \
+           "group by g_name order by times DESC LIMIT 1"
+    mycursor.execute(sql3)
+    result = mycursor.fetchone()
+    print("Game name: ",result[1]," ,Copies sold: ",result[0])
 
 
 if menuOptions:
@@ -133,7 +153,7 @@ if menuOptions:
         view_specific_order()
     elif choice == 5:
         print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\n3.Out most loyal customer"
-              "\nADD MORE LATER")
+              "\n4.View gender statistics.\nADD MORE LATER")
         choice = int(input("\nWhat statistic do you want to view?: "))
         if choice == 1:
             most_sold_game()
@@ -141,6 +161,8 @@ if menuOptions:
             avg_game_cost()
         elif choice == 3:
             loyal_customer()
+        elif choice == 4:
+            popular_gender_game()
     elif choice == 6:
         create_game()
     elif choice == 0:
