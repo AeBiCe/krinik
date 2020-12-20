@@ -157,7 +157,7 @@ if menuOptions:
     choice = int(input("Enter menu choice: "))
     if choice == 1:
         dummy = input("Would you like to fill with random customers (Y/N):")
-        if dummy == "Y":
+        if dummy == "Y" or "y":
             fill_customers()
         else:
             register_customer()
