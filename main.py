@@ -62,6 +62,15 @@ def place_order():
     val = (c_id, g_id, final_price)
     mycursor.execute(sql, val)
     mydb.commit()
+    print("NEW ORDER PLACED INTO DATABASE")
+
+
+def view_specific_order():
+    o_id = input("Enter order ID: ")
+    sql = ("select * from krinik.orders where o_id = %s" % o_id)
+    mycursor.execute(sql, o_id)
+    result = mycursor.fetchone()
+    print("Order ID:",result[0],", Customer ID:",result[1],", Game ID:",result[2],", Order price:",result[3],"$")
 
 
 if menuOptions:
@@ -78,7 +87,7 @@ if menuOptions:
     elif choice == 3:
         place_order()
     elif choice == 4:
-        print("Fourth choice")
+        view_specific_order()
     elif choice == 5:
         print("Fifth choice")
     elif choice == 6:
