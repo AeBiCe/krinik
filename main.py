@@ -74,11 +74,18 @@ def view_specific_order():
 
 
 def most_sold_game():
-    sql = "SELECT g_id, COUNT(g_id) as most_sold from krinik.orders GROUP BY g_id " \
-          "ORDER BY most_sold DESC LIMIT 1"
+    sql = "CREATE VIEW stat as SELECT g_id, COUNT(g_id) as most_sold from krinik.orders GROUP BY g_id " \
+          "ORDER BY most_sold  "
     mycursor.execute(sql)
     result = mycursor.fetchone()
     print("Game ID: ",result[0],", Copies sold: ",result[1])  # Print to test result
+
+
+def avg_game_cost():
+    sql = "select AVG(price) as av from krinik.game"
+    mycursor.execute(sql)
+    avg_cost = mycursor.fetchone()
+    print("The average cost of all games is: ",avg_cost[0])
 
 
 if menuOptions:
@@ -97,11 +104,14 @@ if menuOptions:
     elif choice == 4:
         view_specific_order()
     elif choice == 5:
-        most_sold_game()
-        # print("STATISTIC\n1.View most sold game.\nADD MORE LATER")
-        # choice = input("What statistic do you want to view?")
-        # if choice == 1:
-        #     most_sold_game()
+        avg_game_cost()
+        print("STATISTIC\n1.View most sold game.\n2.Average game cost.\nADD MORE LATER")
+        choice = input("What statistic do you want to view?")
+        if choice == 1:
+            most_sold_game()
+        elif choice == 2:
+            print("HELLO MUTHAFUCKA")
+            avg_game_cost()
     elif choice == 6:
         create_game()
     elif choice == 0:
