@@ -1,6 +1,8 @@
 import mysql.connector
 from faker import Faker
 import random
+import requests
+import json
 '''
 authors:
 Nikolaos Papadopoulos
@@ -15,9 +17,34 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor(buffered=True)
+def fill_customers():
+    fake = Faker()
+    genders = ["male","female"]
+    for x in range(100):
+        c_name = fake.name()
+        gender = random.choice(genders)
+        sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
+        val = (c_name, gender)
+        mycursor.execute(sql, val)
+        mydb.commit()
+
+def fill_games():
+    with open('games.txt') as f:
+        content = f.readlines()
+    # you may also want to remove whitespace characters like `\n` at the end of each line
+    content = [x.strip() for x in content]
+    prices = [50,30,56,100,299,198,29,99,150,10,1000,499,90,333,45,1337,666]
+    for game in content:
+        price = random.choice(prices)
+        g_name = game
+        sql ="INSERT IGNORE INTO GAME (price, g_name) VALUES (%s,%s)"
+        val = (price, g_name)
+        mycursor.execute(sql, val)
+        mydb.commit()
 
 createTables = False
-menuOptions = True
+menuOptions = False
+fillTables = True
 #First draft of create tables.
 if createTables:
     mycursor.execute("DROP TABLE IF EXISTS Orders")
@@ -31,6 +58,9 @@ if createTables:
     mycursor.execute("CREATE TABLE ORDERS (o_id INT AUTO_INCREMENT PRIMARY KEY, c_id INT NOT NULL, "
                      "g_id INT NOT NULL, total_price INT NOT NULL, "
                      "FOREIGN KEY(c_id) REFERENCES CUSTOMER(c_id), FOREIGN KEY(g_id) REFERENCES GAME(g_id))")
+if fillTables:
+    fill_customers()
+    fill_games()
 
 
 def register_customer():
@@ -41,16 +71,10 @@ def register_customer():
     mycursor.execute(sql, val)
     mydb.commit()
 
-def fill_customers():
-    fake = Faker()
-    genders = ["male","female"]
-    for x in range(100):
-        c_name = fake.name()
-        gender = random.choice(genders)
-        sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
-        val = (c_name, gender)
-        mycursor.execute(sql, val)
-        mydb.commit()
+
+
+
+
 
 def create_game():
     price = int(input("Enter price of the new game: "))
@@ -156,11 +180,7 @@ if menuOptions:
 
     choice = int(input("Enter menu choice: "))
     if choice == 1:
-        dummy = input("Would you like to fill with random customers (Y/N):")
-        if dummy == "Y" or "y":
-            fill_customers()
-        else:
-            register_customer()
+        register_customer()
     elif choice == 2:
         print("Second choice")
     elif choice == 3:
