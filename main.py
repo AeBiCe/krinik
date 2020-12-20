@@ -78,7 +78,7 @@ def most_sold_game():
     # We create a view and left join it with table game to only get games that are sold.
     sql = "CREATE VIEW topFiveGames as select ord.g_id, gm.g_name from orders as ord " \
           "left join game as gm on ord.g_id = gm.g_id"
-    mycursor.execute(sql)
+    mycursor.execute(sql)  # execute first query to create view
     # We select the name of the game and the copies sold of that game from the view that we created.
     sql2 = "Select g_name, COUNT(g_name) as copies from topFiveGames GROUP BY g_name ORDER BY copies DESC LIMIT 5"
     mycursor.execute(sql2)
@@ -97,6 +97,21 @@ def avg_game_cost():
     avg_cost = mycursor.fetchone()
     print("The average cost of all games is: ",avg_cost[0])
 
+def loyal_customer():
+    mycursor.execute("DROP VIEW IF EXISTS loyalCustomer")
+    sql = "CREATE VIEW loyalCustomer as select ord.c_id, cs.c_name, ord.total_price from orders as ord " \
+          "left join customer as cs on ord.c_id = cs.c_id"
+    mycursor.execute(sql)
+    mycursor.execute("DROP VIEW IF EXISTS customersum")
+    sql2 = "create view customerSum as SELECT distinct c_name as cus_name, sum(total_price) " \
+           "as the_sum from loyalcustomer group by c_name"
+    mycursor.execute(sql2)
+    sql3 = "select cus_name, MAX(the_sum) as top from customersum group by the_sum order by the_sum DESC LIMIT 1"
+    mycursor.execute(sql3)
+    most_loyal = mycursor.fetchone()
+    print("Customer name: ",most_loyal[0],", Total amount spent: ",most_loyal[1],"$")
+
+
 
 if menuOptions:
 
@@ -114,12 +129,15 @@ if menuOptions:
     elif choice == 4:
         view_specific_order()
     elif choice == 5:
-        print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\nADD MORE LATER")
+        print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\n3.Out most loyal customer"
+              "\nADD MORE LATER")
         choice = int(input("\nWhat statistic do you want to view?: "))
         if choice == 1:
             most_sold_game()
         elif choice == 2:
             avg_game_cost()
+        elif choice == 3:
+            loyal_customer()
     elif choice == 6:
         create_game()
     elif choice == 0:
