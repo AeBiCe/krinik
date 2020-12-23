@@ -28,8 +28,11 @@ def fill_customers():
     for x in range(100):  # loop 100 times to add 100 new customers
         tot_customer = tot_customer+ 1  # increase global counter of customers
         # set name and gender of new customer
-        c_name = fake.name()
         gender = random.choice(genders)
+        if gender == "male":
+            c_name = fake.name_male()
+        else:
+            c_name = fake.name_female()
         sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
         val = (c_name, gender)
         mycursor.execute(sql, val)  # query into database
