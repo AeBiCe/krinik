@@ -16,34 +16,39 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor(buffered=True)
+# Two variables to track total amount of customers and game when filling tables
 tot_customer = 0
 tot_games = 0
+
+# ================================ METHODS TO FILL DATABASE =====================================
 def fill_customers():
     global tot_customer
-    fake = Faker()
-    genders = ["male","female"]
-    for x in range(100):
-        tot_customer = tot_customer+ 1
+    fake = Faker()  # module to create fake names
+    genders = ["male","female"]  # two gender for simplicity
+    for x in range(100):  # loop 100 times to add 100 new customers
+        tot_customer = tot_customer+ 1  # increase global counter of customers
+        # set name and gender of new customer
         c_name = fake.name()
         gender = random.choice(genders)
         sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
         val = (c_name, gender)
-        mycursor.execute(sql, val)
+        mycursor.execute(sql, val)  # query into database
         mydb.commit()
 
 def fill_games():
     global tot_games
+    # Read the text file with games
     with open('games.txt') as f:
         content = f.readlines()
-    content = [x.strip() for x in content]
-    prices = [50,30,56,100,299,198,29,99,150,10,1000,499,90,333,45,1337,666]
+    content = [x.strip() for x in content]  # read and add them to list
+    prices = [50,30,56,100,299,198,29,99,150,10,1000,499,90,333,45,1337,666] # list of different prices
     for game in content:
         tot_games = tot_games+1
-        price = random.choice(prices)
+        price = random.choice(prices) # set random price to random game
         g_name = game
         sql ="INSERT IGNORE INTO GAME (price, g_name) VALUES (%s,%s)"
         val = (price, g_name)
-        mycursor.execute(sql, val)
+        mycursor.execute(sql, val)  # query games into database
         mydb.commit()
 
 
@@ -58,12 +63,13 @@ def fill_order(c_id, g_id):
     val = (c_id, g_id, final_price)
     mycursor.execute(sql, val)
     mydb.commit()
+# ==============================================================================================================
 
+# Variables to set to true/false depending on what is desired
+createTables = False  # set to true if you want to create new empty tables
+menuOptions = True  # set to true if you want to activate menu to check the database
+fillTables = False  # set to true if you want to fill the tables with customer, games and orders
 
-createTables = False
-menuOptions = True
-fillTables = False
-#First draft of create tables.
 if createTables:
     mycursor.execute("DROP TABLE IF EXISTS Orders")
     mycursor.execute("DROP TABLE IF EXISTS Customer")
@@ -84,21 +90,26 @@ if fillTables:
         g_id = random.randint(1,tot_games)
         fill_order(c_id,g_id)
 
+# ======================================METHODS FOR MENU BELOW================================================
+
+
 def register_customer():
+    # take name and gender input
     c_name = str(input("Enter Customer name: "))
     gender = str(input("Enter Customer gender: "))
     sql = "INSERT INTO CUSTOMER (c_name, gender) VALUES (%s,%s)"
     val = (c_name, gender)
-    mycursor.execute(sql, val)
+    mycursor.execute(sql, val)  # query info into database
     mydb.commit()
 
 
 def create_game():
+    # take price and name as input
     price = int(input("Enter price of the new game: "))
     g_name = str(input("Enter the name of the new game: "))
     sql = "INSERT IGNORE INTO GAME (price, g_name) VALUES (%s,%s)"
     val = (price, g_name)
-    mycursor.execute(sql, val)
+    mycursor.execute(sql, val)  # query info into database
     mydb.commit()
 
 
@@ -107,9 +118,8 @@ def place_order():
     c_id = input("Enter Customer ID: ")
     g_id = input("Enter game ID: ")
     sql_get_price = ("select price from krinik.game where g_id = %s" % g_id)  # Query to select price from game id entered
-    total_price = mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
+    mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
     total_price = mycursor.fetchone()  # Fetches value from cursor
-    #print("PRICE: ",tot_price)  # Error handling
     final_price = total_price[0]  # take first value since tot_price is a list
     sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, total_price) VALUES (%s,%s,%s)"  # SQL query to insert order into the table
     val = (c_id, g_id, final_price)
@@ -141,7 +151,6 @@ def most_sold_game():
         print("Game name: ",row[0], )
         print("Copies Sold: ",row[1])
         print("=========================================")
-    #print("Game ID: ",result[0],", Copies sold: ",result[1])  # Print to test result
 
 
 def avg_game_cost():
@@ -188,6 +197,8 @@ def popular_gender_game():
     result = mycursor.fetchone()
     print("Game name: ",result[1]," ,Copies sold: ",result[0])
 
+# ================================ MENU ========================================
+
 
 if menuOptions:
 
@@ -199,8 +210,6 @@ if menuOptions:
     if choice == 1:
         register_customer()
     elif choice == 2:
-        print(tot_games)
-        print(tot_customer)
         print("Second choice")
     elif choice == 3:
         place_order()

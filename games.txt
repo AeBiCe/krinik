@@ -80,8 +80,6 @@ Double Dragon Neon
 Dragon's Lair
 Dragon's Lair II: Time Warp
 Dynasty Warriors 7
-Dynasty Warriors 7: Empires (New)
-Dynasty Warriors 7: Xtreme Legends (New)
 Dynasty Warriors 8
 Dynasty Warriors: Strikeforce
 Earth Defense Force 2025
@@ -119,29 +117,7 @@ Grid 2
 Grid Autosport
 Guacamelee!
 Guilty Gear Xrd -SIGN-
-Hakuoki: Stories of the Shinsengumi
-Hamilton's Great Adventure
-Heavenly Sword (New)
-Heavy Fire: Afghanistan
-Heavy Fire: Shattered Spear
-Hot Shots Golf: Out of Bounds (New)
-Hot Shots Golf: World Invitational
 Hunter’s Trophy 2: America
-Hustle Kings
-ibb & obb
-ICO
-inFAMOUS
-inFAMOUS 2
-inFAMOUS: Festival Of Blood
-Injustice: Gods Among Us
-Invizimals: The Lost Kingdom (New)
-Jeopardy
-Jeremy McGrath's Offroad
-Joe Danger 2: The Movie
-Journey (New)
-Karateka
-Killzone HD (New)
-Killzone 2 (New)
 Killzone 3
 Knytt Underground
 Lead and Gold: Gangs of the Wild West
@@ -161,84 +137,6 @@ LUMINES Supernova
 Magician Lord
 Magrunner: Dark Pulse
 Magus
-Mamorukun Curse! (New)
-Mega Man 9
-Mega Man 10
-Mercury HG
-Metal Slug
-Metal Slug 2
-Mortal Kombat
-Moto GP 13
-Motorcycle Club
-MotorStorm: Apocalypse
-MX vs. ATV Alive
-MX vs. ATV Reflex
-MX vs. ATV Supercross
-MX vs. ATV: Untamed
-NBA 2K14
-Nights Into Dreams
-Ninja Gaiden 3: Razor's Edge
-Ninja Gaiden Sigma
-Ninja Gaiden Sigma 2
-Numblast (New)
-Oddworld: Stranger's Wrath HD
-Okabu (New)
-Operation Flashpoint: Dragon Rising
-Operation Flashpoint: Red River
-Overlord: Raising Hell
-Overlord 2
-PAC-MAN Championship Edition DX
-Painkiller: Hell & Damnation
-Papo & Yo
-Penny Arcade Adventures: On the Rain-Slick Precipice of Darkness: Episode 1
-Penny Arcade Adventures: On the Rain-Slick Precipice of Darkness: Episode 2
-PID (Peculiar Destination)
-PixelJunk Eden
-PixelJunk Eden Encore (New)
-PixelJunk Monsters Encore (New)
-PixelJunk Monsters
-PixelJunk Racers 2nd Lap
-PixelJunk Shooter
-PixelJunk Shooter 2
-PixelJunk Sidescroller
-Piyotama
-Planet Minigolf
-Port Royale 3: Gold
-Proteus
-Puppeteer
-Pure Chess
-Ragnarok Odyssey Ace
-Raiden IV Overkill
-Rainbow Moon
-Ratchet & Clank: A Crack in Time
-Ratchet & Clank: Quest for Booty (New)
-Ratchet & Clank: All 4 One
-Ratchet & Clank: Full Frontal Assault
-Ratchet & Clank: Into the Nexus
-Record of Agarest War
-Record of Agarest War 2
-Record of Agarest War Zero
-Red Faction Battlegrounds
-Red Faction: Armageddon
-Red Faction: Guerilla
-Red Johson's Chronicles
-Renegade Ops
-Resident Evil 4
-Resident Evil 5: Gold Edition
-Resident Evil 6
-Resident Evil Code Veronica X HD
-Resident Evil: The Darkside Chronicles HD
-Resident Evil: The Umbrella Chronicles HD
-Resistance 3
-Retrograde
-Ricochet HD (New)
-Rocketbirds: Hardboiled Chicken
-R-Type Dimensions
-Saints Row 2
-Saints Row IV
-Saints Row: The Third The Full Package
-Samurai Showdown
-Sanctum 2
 Savage Moon (New)
 Shadow of the Colossus
 Shatter
@@ -250,73 +148,4 @@ Sky Fighter
 Slender: The Arrival
 Sly Cooper Collection
 Sly Cooper: Thieves in Time
-Snakeball (New)
-Sniper Elite V2
-Sniper: Ghost Warrior
-Sniper: Ghost Warrior 2
-Soldner-X 2: Final Prototype
-Soldner-X: Himmelssturmer
-Sonic CD
-Sonic Generations
-Sonic The Hedgehog 4 Episode I
-Sonic The Hedgehog 4 Episode II
-Sound Shapes
-Space Ace
-Spelunker HD
-Spelunky
-Starhawk (New)
-Starwhal
-Stealth Inc: A Clone in the Dark
-Stick it to the Man
-Street Fighter 3 Third-Strike Online Edition
-Strider
-Super Mega Baseball
-Super Puzzle Fighter II Turbo HD Remix
-Super Sidekicks
-Super Stacker Party (New)
-Super Stardust HD
-Super Street Fighter II Turbo HD Remix
-Swarm
-Tales from Space: Mutant Blobs Attack
-Tales from Space: About a Blob
-THE BACONING
-The King of Fighters '94
-The King of Fighters '95
-The King of Fighters '96
-The King of Fighters XIII
-The Last Guy
-The Last of Us
-The Last of Us: Left Behind
-The LEGO Movie Videogame
-The Raven: Legacy of a Master Thief
-The Unfinished Swan (New)
-The Walking Dead: The Complete First Season
-Tokyo Jungle
-Tokyo Twilight Ghost Hunters
-Toy Home (New)
-Toybox Turbos
-Trash Panic (New)
-Trinity: Souls of Zill O'll (New)
-Truck Racer
-Twisted Metal
-Ultra Street Fighter IV
-Uncharted: Drake’s Fortune
-Uncharted 2: Among Thieves
-Uncharted 3: Drake's Deception - Game of the Year Edition (New)
-Under Night In-Birth Exe:Late (New)
-Urban Trial FreeStyle
-Vessel
-Virtua Fighter 5: Final Showdown
-Wakeboarding HD (New)
-Warhawk
-Way of the Samurai 3
-Wheel of Fortune
-When Vikings Attack (New)
-White Knight Chronicles (New)
-World Heroes
-WRC 4: FIA World Rally Championship
-XBLAZE Code: Embryo (New)
-XCOM: Enemy Within
-Zen Pinball 2: Zen Pinball Classics
-Zeno Clash II
-Zombie Tycoon II: Brainhov's Revenge
+
