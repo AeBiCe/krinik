@@ -206,21 +206,19 @@ def popular_gender_game():
 if menuOptions:
 
     print("======MENU======")
-    print("1.Register Customer\n2.Delete customer*TEMP*\n3.New order\n4.View Specific Order\n"
-          "5.Show Store Statistics\n6.Add new game\n0.Quit")
+    print("1.Register Customer\n2.New order\n3.View Specific Order\n"
+          "4.Show Store Statistics\n5.Add new game\n0.Quit")
 
     choice = int(input("Enter menu choice: "))
     if choice == 1:
         register_customer()
     elif choice == 2:
-        print("Second choice")
-    elif choice == 3:
         place_order()
-    elif choice == 4:
+    elif choice == 3:
         view_specific_order()
-    elif choice == 5:
-        print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\n3.Out most loyal customer"
-              "\n4.View gender statistics.\nADD MORE LATER")
+    elif choice == 4:
+        print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\n3.Our most loyal customer"
+              "\n4.View gender statistics.")
         choice = int(input("\nWhat statistic do you want to view?: "))
         if choice == 1:
             most_sold_game()
@@ -230,7 +228,7 @@ if menuOptions:
             loyal_customer()
         elif choice == 4:
             popular_gender_game()
-    elif choice == 6:
+    elif choice == 5:
         create_game()
     elif choice == 0:
         print("Game over.")
