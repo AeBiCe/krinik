@@ -1,3 +1,4 @@
+from typing import Sized
 import mysql.connector
 from faker import Faker
 import random
@@ -62,8 +63,9 @@ def fill_order(c_id, g_id):
     total_price = mycursor.fetchone()  # Fetches value from cursor
     #print("PRICE: ",tot_price)  # Error handling
     final_price = total_price[0]  # take first value since tot_price is a list
-    sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, total_price) VALUES (%s,%s,%s)"  # SQL query to insert order into the table
-    val = (c_id, g_id, final_price)
+    order_num = c_id + str(id(g_id))
+    sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, order_num, total_price) VALUES (%s,%s,%s,%s)"  # SQL query to insert order into the table
+    val = (c_id, g_id, order_num, final_price)
     mycursor.execute(sql, val)
     mydb.commit()
 # ==============================================================================================================
@@ -83,7 +85,7 @@ if createTables:
     mycursor.execute("CREATE TABLE GAME (g_id INT AUTO_INCREMENT PRIMARY KEY, price INT NOT NULL,"
                      " g_name VARCHAR(255) NOT NULL)")
     mycursor.execute("CREATE TABLE ORDERS (o_id INT AUTO_INCREMENT PRIMARY KEY, c_id INT NOT NULL, "
-                     "g_id INT NOT NULL, total_price INT NOT NULL, "
+                     "g_id INT NOT NULL, order_num VARCHAR(255) NOT NULL, total_price INT NOT NULL, "
                      "FOREIGN KEY(c_id) REFERENCES CUSTOMER(c_id), FOREIGN KEY(g_id) REFERENCES GAME(g_id))")
 if fillTables:
     fill_customers()
@@ -117,18 +119,35 @@ def create_game():
 
 
 def place_order():
-    # take customer id and game id from consol
+    not_done = True # Variable to check if the customer wants to continue shopping
+    basket = [] # order basket
+    final_price = 0 # Final price of the order
     c_id = input("Enter Customer ID: ")
-    g_id = input("Enter game ID: ")
-    sql_get_price = ("select price from krinik.game where g_id = %s" % g_id)  # Query to select price from game id entered
-    mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
-    total_price = mycursor.fetchone()  # Fetches value from cursor
-    final_price = total_price[0]  # take first value since tot_price is a list
-    sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, total_price) VALUES (%s,%s,%s)"  # SQL query to insert order into the table
-    val = (c_id, g_id, final_price)
-    mycursor.execute(sql, val)
-    mydb.commit()
-    print("NEW ORDER PLACED INTO DATABASE")
+
+    while not_done: # Continue adding games to basket until satisfied
+        item = input("Enter a game ID to add to basket or type X to exit: ")
+
+        if item == 'x' or item == 'X':
+            break
+        else:
+            basket.append(item)
+    for g_id in basket: # Calculate total price of the order
+        sql_get_price = ("select price from krinik.game where g_id = %s" % g_id)  # Query to select price from game id entered
+        mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
+        total_price = mycursor.fetchone()  # Fetches value from cursor
+        final_price += total_price[0]  # take first value since tot_price is a list
+    
+    order_num = c_id + str(id(basket)) # Calculate unique ID for the order
+
+    for item in basket:
+        sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, order_num, total_price) VALUES (%s,%s,%s,%s)"  # SQL query to insert order into the table
+        val = (c_id, g_id, order_num, final_price)
+        mycursor.execute(sql, val)
+        mydb.commit()
+    if len(basket) == 0:
+        print("No order was placed, basket was empty!") # If basket was emty at checkout the user is notified
+    else:
+        print("NEW ORDER PLACED INTO DATABASE")
 
 
 def view_specific_order():
