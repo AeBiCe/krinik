@@ -64,29 +64,35 @@ def fill_order(c_id, g_id):
     #print("PRICE: ",tot_price)  # Error handling
     final_price = total_price[0]  # take first value since tot_price is a list
     order_num = str(c_id) + str(id(g_id))
-    sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, order_num, total_price) VALUES (%s,%s,%s,%s)"  # SQL query to insert order into the table
+    sql = "INSERT IGNORE INTO ORDERS(c_id, total_price) VALUES (%s,%s)"  # SQL query to insert order into the table
     val = (c_id, g_id, order_num, final_price)
     mycursor.execute(sql, val)
     mydb.commit()
 # ==============================================================================================================
 
 # Variables to set to true/false depending on what is desired
-createTables = False  # set to true if you want to create new empty tables
-menuOptions = True  # set to true if you want to activate menu to check the database
+createTables = True  # set to true if you want to create new empty tables
+menuOptions = False  # set to true if you want to activate menu to check the database
 fillTables = False  # set to true if you want to fill the tables with customer, games and orders
 
 if createTables:
     mycursor.execute("DROP TABLE IF EXISTS Orders")
     mycursor.execute("DROP TABLE IF EXISTS Customer")
     mycursor.execute("DROP TABLE IF EXISTS Game")
+    mycursor.execute("DROP TABLE IF EXISTS ORDERINFO")
 
+    mycursor.execute("use krinik;")
     mycursor.execute("CREATE TABLE CUSTOMER (c_id INT AUTO_INCREMENT PRIMARY KEY, c_name VARCHAR(255) NOT NULL, "
-                     "gender VARCHAR(255) NOT NULL)")
+                     "gender VARCHAR(255) NOT NULL);")
+    mycursor.execute("CREATE TABLE ORDERS(o_id INT AUTO_INCREMENT PRIMARY KEY, total_price INT NOT NULL,"
+                     "c_id INT NOT NULL, FOREIGN KEY(c_id) REFERENCES CUSTOMER(c_id)")
     mycursor.execute("CREATE TABLE GAME (g_id INT AUTO_INCREMENT PRIMARY KEY, price INT NOT NULL,"
-                     " g_name VARCHAR(255) NOT NULL)")
-    mycursor.execute("CREATE TABLE ORDERS (o_id INT AUTO_INCREMENT PRIMARY KEY, c_id INT NOT NULL, "
-                     "g_id INT NOT NULL, order_num VARCHAR(255) NOT NULL, total_price INT NOT NULL, "
-                     "FOREIGN KEY(c_id) REFERENCES CUSTOMER(c_id), FOREIGN KEY(g_id) REFERENCES GAME(g_id))")
+                     " g_name VARCHAR(255) NOT NULL);")
+    mycursor.execute("CREATE TABLE ORDERINFO (info_id INT AUTO_INCREMENT PRIMARY KEY, "
+                     "FOREIGN KEY(o_id) REFERENCES ORDERS(o_id)"
+                     ", game VARCHAR(255) NOT NULL)")
+
+
 if fillTables:
     fill_customers()
     # fill_games()
@@ -136,18 +142,20 @@ def place_order():
         mycursor.execute(sql_get_price, g_id)  # Execute query and use game id entered as value
         total_price = mycursor.fetchone()  # Fetches value from cursor
         final_price += total_price[0]  # take first value since tot_price is a list
-    
-    order_num = c_id + str(id(basket)) # Calculate unique ID for the order
 
-    for item in basket:
-        sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, order_num, total_price) VALUES (%s,%s,%s,%s)"  # SQL query to insert order into the table
-        val = (c_id, g_id, order_num, final_price)
-        mycursor.execute(sql, val)
-        mydb.commit()
+
+    sql = "INSERT IGNORE INTO ORDERS(c_id, total_price) VALUES (%s,%s)"# SQL query to insert order into the table
+    val = (c_id, final_price)
+    mycursor.execute(sql, val)
+    mydb.commit()
+
     if len(basket) == 0:
         print("No order was placed, basket was empty!") # If basket was emty at checkout the user is notified
     else:
         print("NEW ORDER PLACED INTO DATABASE")
+
+
+
 
 
 def view_specific_order():
