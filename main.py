@@ -63,7 +63,7 @@ def fill_order(c_id, g_id):
     total_price = mycursor.fetchone()  # Fetches value from cursor
     #print("PRICE: ",tot_price)  # Error handling
     final_price = total_price[0]  # take first value since tot_price is a list
-    order_num = c_id + str(id(g_id))
+    order_num = str(c_id) + str(id(g_id))
     sql = "INSERT IGNORE INTO ORDERS(c_id, g_id, order_num, total_price) VALUES (%s,%s,%s,%s)"  # SQL query to insert order into the table
     val = (c_id, g_id, order_num, final_price)
     mycursor.execute(sql, val)
@@ -89,7 +89,7 @@ if createTables:
                      "FOREIGN KEY(c_id) REFERENCES CUSTOMER(c_id), FOREIGN KEY(g_id) REFERENCES GAME(g_id))")
 if fillTables:
     fill_customers()
-    fill_games()
+    # fill_games()
     for x in range(100):
         c_id = random.randint(1,tot_customer)
         g_id = random.randint(1,tot_games)
