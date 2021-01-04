@@ -2,6 +2,7 @@ from typing import Sized
 import mysql.connector
 from faker import Faker
 import random
+import queries as q
 
 '''
 authors:
@@ -82,11 +83,12 @@ menuOptions = True  # set to true if you want to activate menu to check the data
 fillTables = False  # set to true if you want to fill the tables with customer, games and orders
 
 if createTables:
+    # DROP TABLES IF THEY ALREADY EXIST
     mycursor.execute("DROP TABLE IF EXISTS Game")
     mycursor.execute("DROP TABLE IF EXISTS ORDERINFO")
     mycursor.execute("DROP TABLE IF EXISTS Orders")
     mycursor.execute("DROP TABLE IF EXISTS Customer")
-
+    # TABLE CREATION
     mycursor.execute("use krinik;")
     mycursor.execute("CREATE TABLE CUSTOMER (c_id INT AUTO_INCREMENT PRIMARY KEY, c_name VARCHAR(255) NOT NULL, "
                      "gender VARCHAR(255) NOT NULL);")
@@ -155,22 +157,20 @@ def place_order():
     mycursor.execute(sql, val)
     mydb.commit()
 
-    sql = "SELECT MAX(o_id) FROM krinik.orders"
+    sql = "SELECT MAX(o_id) FROM krinik.orders"  # Select the latest order ID which is MAX
     mycursor.execute(sql)
     o_id = mycursor.fetchone()
     sql = "INSERT IGNORE INTO ORDERINFO(o_id,game) VALUES(%s,%s)"
+    # Insert order ID and game ID to order info
     for game in basket:
         val = (o_id[0], int(game))
         mycursor.execute(sql, val)
         mydb.commit()
 
     if len(basket) == 0:
-        print("No order was placed, basket was empty!") # If basket was emty at checkout the user is notified
+        print("No order was placed, basket was empty!") # If basket was empty at checkout the user is notified
     else:
         print("NEW ORDER PLACED INTO DATABASE")
-
-
-
 
 
 def view_specific_order():
@@ -229,19 +229,21 @@ def loyal_customer():
 
 
 def popular_gender_game():
+    #drop views if exist to create new
     mycursor.execute("drop view if exists firstView;drop view if exists getCustomer;drop view if exists genderStat;")
-    # create view with game id and gender and join with customer table
+    #Create views to get game ID and order ID together
     sql = "create view firstView as SELECT oi.game, o.o_id from orderinfo as oi " \
           "left join orders as o on o.o_id = oi.o_id;"
     mycursor.execute(sql)
+    #Get customer ID and and game ID together
     sql = "create view getCustomer as SELECT o.c_id, fv.game from orders as o " \
           "left join firstView as fv on o.o_id = fv.o_id;"
     mycursor.execute(sql)
+    #Select the genders of the clients
     sql = "CREATE view genderStat as SELECT o.game, c.gender from getcustomer as o " \
           "right join customer as c on o.c_id = c.c_id;"
     mycursor.execute(sql)
-
-    gender = input("What gender do you want to look up (male or female): ")
+    gender = input("What gender do you want to look up (male or female): ")  # take input
     # create view and select game id and the amount of times it occurs
     # to find the most sold game where the gender matches
     sql = ("create view popGender as select game, count(game) as times from genderStat where BINARY gender = '%s'" \
