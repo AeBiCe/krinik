@@ -78,11 +78,11 @@ def fill_order(c_id, g_id):
 # ==============================================================================================================
 
 # Variables to set to true/false depending on what is desired
-createTables = False  # set to true if you want to create new empty tables
-menuOptions = True  # set to true if you want to activate menu to check the database
-fillTables = False  # set to true if you want to fill the tables with customer, games and orders
 
-if createTables:
+menuOptions = True  # Leave as true
+
+
+def create_tables():
     # DROP TABLES IF THEY ALREADY EXIST
     mycursor.execute("DROP TABLE IF EXISTS Game")
     mycursor.execute("DROP TABLE IF EXISTS ORDERINFO")
@@ -101,7 +101,7 @@ if createTables:
                      ", game VARCHAR(255) NOT NULL)")
 
 
-if fillTables:
+def  fill_tables():
     fill_customers()
     fill_games()
     for x in range(500):
@@ -263,7 +263,7 @@ if menuOptions:
 
     print("======MENU======")
     print("1.Register Customer\n2.New order\n3.View Specific Order\n"
-          "4.Show Store Statistics\n5.Add new game\n0.Quit")
+          "4.Show Store Statistics\n5.Add new game\n6.Fill tables with info\n7.Create new tables.\n0.Quit")
 
     choice = int(input("Enter menu choice: "))
     if choice == 1:
@@ -286,6 +286,12 @@ if menuOptions:
             popular_gender_game()
     elif choice == 5:
         create_game()
+    elif choice == 6:
+        fill_tables()
+        print("Tables now filled with test data.")
+    elif choice == 7:
+        create_tables()
+        print("New tables successfully created.")
     elif choice == 0:
         print("Game over.")
     else:
