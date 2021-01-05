@@ -266,6 +266,7 @@ def popular_gender_game():
 if menuOptions:
 
     options = ["0","1","2","3","4","5","6","7"] # Options for error handling
+    stat_options = ["1","2","3","4"] # Options for statistics
     print("======MENU======")
     print("1.Register Customer\n2.New order\n3.View Specific Order\n"
           "4.Show Store Statistics\n5.Add new game\n6.Fill tables with info\n7.Create new tables.\n0.Quit")
@@ -285,7 +286,12 @@ if menuOptions:
     elif choice == 4:
         print("\nSTATISTICS\n1.View most sold games.\n2.Average game cost.\n3.Our most loyal customer"
               "\n4.View gender statistics.")
-        choice = int(input("\nWhat statistic do you want to view?: "))
+
+        choice = input("\nWhat statistic do you want to view?: ")
+        while choice not in stat_options: # Error handling loop
+            choice = input("Enter a valid menu choice (1-4): ")
+        choice = int(choice) # converts input to int from str
+        
         if choice == 1:
             most_sold_game()
         elif choice == 2:
