@@ -1,4 +1,3 @@
-from typing import Sized
 import mysql.connector
 from faker import Faker
 import random
@@ -230,32 +229,34 @@ def loyal_customer():
 
 
 def popular_gender_game():
+    genders = ["male","female"]
     #drop views if exist to create new
     mycursor.execute("drop view if exists firstView;")
     mycursor.execute("drop view if exists getCustomer;")
     mycursor.execute("drop view if exists genderStat;")
+    mycursor.execute("drop view if exists popGender;")
     #Create views to get game ID and order ID together
-    sql = "create view firstView as SELECT oi.game, o.o_id from orderinfo as oi " \
-          "left join orders as o on o.o_id = oi.o_id;"
-    mycursor.execute(sql)
+    mycursor.execute("create view firstView as SELECT oi.game, o.o_id from orderinfo as oi " \
+          "left join orders as o on o.o_id = oi.o_id;")
     #Get customer ID and and game ID together
-    sql = "create view getCustomer as SELECT o.c_id, fv.game from orders as o " \
-          "left join firstView as fv on o.o_id = fv.o_id;"
-    mycursor.execute(sql)
+    mycursor.execute("create view getCustomer as SELECT o.c_id, fv.game from orders as o " \
+          "left join firstView as fv on o.o_id = fv.o_id;")
     #Select the genders of the clients
-    sql = "CREATE view genderStat as SELECT o.game, c.gender from getcustomer as o " \
-          "right join customer as c on o.c_id = c.c_id;"
-    mycursor.execute(sql)
+    mycursor.execute("CREATE view genderStat as SELECT o.game, c.gender from getcustomer as o " \
+          "right join customer as c on o.c_id = c.c_id;")
     gender = input("What gender do you want to look up (male or female): ")  # take input
+    
+    while gender not in genders:
+        gender = input("What gender do you want to look up (male or female): ")
+
     # create view and select game id and the amount of times it occurs
     # to find the most sold game where the gender matches
     sql = ("create view popGender as select game, count(game) as times from genderStat where BINARY gender = '%s'" \
           " group by game order by times DESC LIMIT 5;" %gender)
     mycursor.execute(sql, gender)
     # We select the game name and the copies sold of that game from previous table
-    sql = "SELECT times, g_name from popGender as p right join game as g on p.game = g.g_id" \
-           " group by g_name order by times DESC LIMIT 1"
-    mycursor.execute(sql)
+    mycursor.execute("SELECT times, g_name from popGender as p right join game as g on p.game = g.g_id" \
+           " group by g_name order by times DESC LIMIT 1")
     result = mycursor.fetchone()
     print("Game name: ",result[1],", Copies sold: ",result[0])
 
