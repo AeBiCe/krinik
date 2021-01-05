@@ -5,9 +5,12 @@ import random
 import queries as q
 
 '''
-authors:
+Authors:
 Nikolaos Papadopoulos
 Kristoffer Björklund
+
+Version:
+1.0
 
 '''
 mydb = mysql.connector.connect(
@@ -56,7 +59,6 @@ def fill_games():
         mycursor.execute(sql, val)  # query games into database
         mydb.commit()
 
-
 def fill_order(c_id, g_id):
     # take customer id and game id from consol
     sql_get_price = ("select price from krinik.game where g_id = %s" % g_id)  # Query to select price from game id entered
@@ -80,7 +82,6 @@ def fill_order(c_id, g_id):
 # Variables to set to true/false depending on what is desired
 
 menuOptions = True  # Leave as true
-
 
 def create_tables():
     # DROP TABLES IF THEY ALREADY EXIST
@@ -230,7 +231,9 @@ def loyal_customer():
 
 def popular_gender_game():
     #drop views if exist to create new
-    mycursor.execute("drop view if exists firstView;drop view if exists getCustomer;drop view if exists genderStat;")
+    mycursor.execute("drop view if exists firstView;")
+    mycursor.execute("drop view if exists getCustomer;")
+    mycursor.execute("drop view if exists genderStat;")
     #Create views to get game ID and order ID together
     sql = "create view firstView as SELECT oi.game, o.o_id from orderinfo as oi " \
           "left join orders as o on o.o_id = oi.o_id;"
@@ -254,18 +257,24 @@ def popular_gender_game():
            " group by g_name order by times DESC LIMIT 1"
     mycursor.execute(sql)
     result = mycursor.fetchone()
-    print("Game name: ",result[1]," ,Copies sold: ",result[0])
+    print("Game name: ",result[1],", Copies sold: ",result[0])
 
 # ================================ MENU ========================================
 
 
 if menuOptions:
 
+    options = ["0","1","2","3","4","5","6","7"] # Options for error handling
     print("======MENU======")
     print("1.Register Customer\n2.New order\n3.View Specific Order\n"
           "4.Show Store Statistics\n5.Add new game\n6.Fill tables with info\n7.Create new tables.\n0.Quit")
 
-    choice = int(input("Enter menu choice: "))
+    choice = input("Enter menu choice: ")
+    while choice not in options: # Error handling loop
+        choice = input("Enter a valid menu choice (0-7): ")
+
+    choice = int(choice) # converts input to int from str
+    
     if choice == 1:
         register_customer()
     elif choice == 2:
@@ -273,7 +282,7 @@ if menuOptions:
     elif choice == 3:
         view_specific_order()
     elif choice == 4:
-        print("\nSTATISTIC\n1.View most sold game.\n2.Average game cost.\n3.Our most loyal customer"
+        print("\nSTATISTICS\n1.View most sold games.\n2.Average game cost.\n3.Our most loyal customer"
               "\n4.View gender statistics.")
         choice = int(input("\nWhat statistic do you want to view?: "))
         if choice == 1:
