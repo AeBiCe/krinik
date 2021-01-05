@@ -174,10 +174,8 @@ def place_order():
 
 
 def view_specific_order():
-    sql = "drop view if exists price;"
-    mycursor.execute(sql)
-    sql = " create view price as select price, g_id from game;"
-    mycursor.execute(sql)
+    mycursor.execute("drop view if exists price;")
+    mycursor.execute("create view price as select price, g_id from game;")
     o_id = input("Enter order ID: ")
     sql = ("SELECT o.o_id, p.price, o.c_id, oi.game from orders o inner join orderinfo as oi on oi.o_id = o.o_id join "
            "price as p on oi.game = p.g_id where o.o_id = %s" % o_id)  # Query to select specific order
@@ -190,12 +188,10 @@ def view_specific_order():
 def most_sold_game():
     mycursor.execute("DROP VIEW IF EXISTS topFiveGames")  # if view exists then drop it to create new.
     # We create a view and left join it with table game to only get games that are sold.
-    sql = "CREATE VIEW topFiveGames as select ord.game, gm.g_name from krinik.orderinfo as ord " \
-          "left join game as gm on ord.game = gm.g_id;"
-    mycursor.execute(sql)  # execute first query to create view
+    mycursor.execute("CREATE VIEW topFiveGames as select ord.game, gm.g_name from krinik.orderinfo as ord " \
+          "left join game as gm on ord.game = gm.g_id;")  # execute first query to create view
     # We select the name of the game and the copies sold of that game from the view that we created.
-    sql2 = "Select g_name, COUNT(g_name) as copies from topFiveGames GROUP BY g_name ORDER BY copies DESC LIMIT 5"
-    mycursor.execute(sql2)
+    mycursor.execute("Select g_name, COUNT(g_name) as copies from topFiveGames GROUP BY g_name ORDER BY copies DESC LIMIT 5")
     result = mycursor.fetchall()
     print("Printing top five sold games\n=========================================")
     for row in result:
@@ -205,25 +201,21 @@ def most_sold_game():
 
 
 def avg_game_cost():
-    sql = "select AVG(price) as av from krinik.game"
-    mycursor.execute(sql)
+    mycursor.execute("select AVG(price) as av from krinik.game")
     avg_cost = mycursor.fetchone()
-    print("The average cost of all games is: ",avg_cost[0])
+    print("The average cost of all games is: $",round(avg_cost[0],2)) # Round the amount to two decimals
 
 def loyal_customer():
     mycursor.execute("DROP VIEW IF EXISTS loyalCustomer")  # if view exists we drop it
     # We create a view with customer id, customer name and prices from orders and join that with out customer table
-    sql = "CREATE VIEW loyalCustomer as select ord.c_id, cs.c_name, ord.total_price from orders as ord " \
-          "left join customer as cs on ord.c_id = cs.c_id"
-    mycursor.execute(sql)  # execute sql above
+    mycursor.execute("CREATE VIEW loyalCustomer as select ord.c_id, cs.c_name, ord.total_price from orders as ord " \
+          "left join customer as cs on ord.c_id = cs.c_id")
     mycursor.execute("DROP VIEW IF EXISTS customersum")  # If customersum view exists we drop it
     # We create a new view with customer name and the sum of all of the customers purchases taken from previous view
-    sql2 = "create view customerSum as SELECT distinct c_name as cus_name, sum(total_price) " \
-           "as the_sum from loyalcustomer group by c_name"
-    mycursor.execute(sql2) # execute query above
+    mycursor.execute("create view customerSum as SELECT distinct c_name as cus_name, sum(total_price) " \
+           "as the_sum from loyalcustomer group by c_name") # execute query above
     # We select the customer with the highest amount purchased
-    sql3 = "select cus_name, MAX(the_sum) as top from customersum group by the_sum order by the_sum DESC LIMIT 1"
-    mycursor.execute(sql3) # execute query above
+    mycursor.execute("select cus_name, MAX(the_sum) as top from customersum group by the_sum order by the_sum DESC LIMIT 1") # execute query above
     most_loyal = mycursor.fetchone()
     print("Customer name: ",most_loyal[0],", Total amount spent: $",most_loyal[1])
 
@@ -235,6 +227,7 @@ def popular_gender_game():
     mycursor.execute("drop view if exists getCustomer;")
     mycursor.execute("drop view if exists genderStat;")
     mycursor.execute("drop view if exists popGender;")
+    
     #Create views to get game ID and order ID together
     mycursor.execute("create view firstView as SELECT oi.game, o.o_id from orderinfo as oi " \
           "left join orders as o on o.o_id = oi.o_id;")
