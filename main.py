@@ -84,9 +84,9 @@ menuOptions = True  # Leave as true
 
 def create_tables():
     # DROP TABLES IF THEY ALREADY EXIST
-    mycursor.execute("DROP TABLE IF EXISTS Game")
     mycursor.execute("DROP TABLE IF EXISTS ORDERINFO")
     mycursor.execute("DROP TABLE IF EXISTS Orders")
+    mycursor.execute("DROP TABLE IF EXISTS Game")
     mycursor.execute("DROP TABLE IF EXISTS Customer")
     # TABLE CREATION
     mycursor.execute("use krinik;")
